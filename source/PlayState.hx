@@ -40,8 +40,6 @@ class PlayState extends FlxState
 		#end
         
 		super.create();
-		
-        FlxG.log.add(FlxAngle.sincos.cos[90]);
         
 		world = new World<Tile>();
 
