@@ -2,9 +2,9 @@ package worldgen;
 
 import flash.geom.Point;
 import flixel.FlxSprite;
-import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -47,7 +47,7 @@ class Polygon
 		if (kind == tinfo.deepOcean())
 			color = FlxColor.BLUE;
 		else if (kind == tinfo.grass())
-			color = FlxColor.FOREST_GREEN;
+			color = FlxColor.GREEN;
 		else if (kind == tinfo.mountain())
 			color = FlxColor.GRAY;
 		FlxSpriteUtil.drawPolygon(sprite, flxVertices, color, {color:color, thickness: 1});

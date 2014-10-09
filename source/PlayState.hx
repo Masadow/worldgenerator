@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.math.FlxAngle;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
@@ -37,9 +38,11 @@ class PlayState extends FlxState
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.visible = true;
 		#end
-
+        
 		super.create();
-
+		
+        FlxG.log.add(FlxAngle.sincos.cos[90]);
+        
 		world = new World<Tile>();
 
 		world.config.layerBounds.width = 400;
@@ -106,9 +109,9 @@ class PlayState extends FlxState
 	/**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void
+	override public function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 
 		if (FlxG.keys.pressed.LEFT)
 			FlxG.camera.scroll.x -= 300 * FlxG.elapsed;
