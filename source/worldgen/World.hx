@@ -49,17 +49,17 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 			
 		var mapData : Array<Int> = new Array<Int>();
 
-		for (i in 0...width * height)
-		{ //Fill the map with ocean
-			mapData.push(tinfo.deepOcean());
-		}
-		
 		polygons = new Polygons(config, tinfo);
 		land = new Land(polygons.detailedPoly(), polygons.voronoi, config, tinfo);
 
-		tilemap.widthInTiles = width;
-		tilemap.heightInTiles = height;
-		tilemap.loadMap(mapData, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
+        //Generate the tilemap
+		for (i in 0...width * height)
+		{ //Fill the map with ocean
+            
+			mapData.push(tinfo.deepOcean());
+		}
+        
+        tilemap.loadMapFromArray(mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
 		created = true;
 	}
 
@@ -94,4 +94,12 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 			land.draw(debugSprite);
 		}
 	}
+    
+    public function drawTilemap()
+    {
+        if (created)
+        {
+            tilemap.draw();
+        }
+    }
 }

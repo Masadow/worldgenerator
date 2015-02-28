@@ -26,12 +26,15 @@ class PlayState extends FlxState
 	private var world : World<Tile>;
 	private var dirtyWorld : Bool;
 	private var drawVoronoi : Bool;
+    private var drawTilemap : Bool;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
+		var sincos = FlxAngle.sinCosGenerator();
+		
 		// Set a background color
 		FlxG.cameras.bgColor = 0xff131c1b;
 		// Show the mouse (in case it hasn't been disabled)
@@ -56,15 +59,16 @@ class PlayState extends FlxState
 		world.config.noise = perlin;
 		world.config.waterLevel = 0.35;
 
-		world.create(10, 10);
+		world.create(12, 12);
 		dirtyWorld = true;
 
 //		add(world.tilemap);
 		add(world.debugSprite);
 
 		drawVoronoi = false;
+        drawTilemap = false;
 
-		add(new FlxText(FlxG.width - 220, 0, 220, "R: Randomize\nI: Zoom In\nO: Zoom Out\nArrow Keys: Move around\nV: Enable/Disable Voronoi", 12));
+		add(new FlxText(FlxG.width - 220, 0, 220, "R: Randomize\nI: Zoom In\nO: Zoom Out\nArrow Keys: Move around\nV: Enable/Disable Voronoi\nM: Enable/Disable Tilemap", 12));
 		
 		Controls.world = world;
 		Controls.perlin = perlin;
@@ -94,13 +98,16 @@ class PlayState extends FlxState
 	{
 		super.draw();
 
-		if (dirtyWorld)
+        if (drawTilemap) {
+            world.drawTilemap();
+        }
+		else if (dirtyWorld)
 		{
 			dirtyWorld = false;
-			world.beginDraw();
-			world.drawNoise();
-			if (drawVoronoi)
-				world.drawVoronoi();
+            world.beginDraw();
+            world.drawNoise();
+            if (drawVoronoi)
+                world.drawVoronoi();
 		}
 	}
 
@@ -136,6 +143,13 @@ class PlayState extends FlxState
 			drawVoronoi = !drawVoronoi;
 			dirtyWorld = true;
 		}
-	}
+
+		if (FlxG.keys.justPressed.M)
+		{
+            trace("Test");
+			drawTilemap = !drawTilemap;
+			dirtyWorld = true;
+		}
+    }
 	
 }
