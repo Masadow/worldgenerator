@@ -59,7 +59,7 @@ class PlayState extends FlxState
 		world.config.noise = perlin;
 		world.config.waterLevel = 0.35;
 
-		world.create(48, 48);
+		world.create(50, 50);
         world.tilemap.scale.set(0.25, 0.25);
 		dirtyWorld = true;
 
@@ -84,6 +84,10 @@ class PlayState extends FlxState
 		add(new Control(Controls.changeAmplitude, "Amplitude", FlxG.width - 220, 280));
 		add(new Control(Controls.changeOctave, "Octaves", FlxG.width - 220, 300));
 		add(new Control(Controls.changePersistance, "Persistance", FlxG.width - 220, 320));
+//		add(new FlxText(FlxG.width - 220, 240, 340, "Cities configuration"));
+//		add(new Control(Controls.changeMinDistance, "Minimum distance", FlxG.width - 220, 360));
+//		add(new Control(Controls.changeMinSize, "Minimum size", FlxG.width - 220, 380));
+//		add(new Control(Controls.changeMaxSize, "Maximum size", FlxG.width - 220, 400));
 	}
 
 	/**
@@ -136,7 +140,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.R)
 		{
 			dirtyWorld = true;
-			world.create(10, 10);
+			world.create(50, 50);
 		}
 		
 		if (FlxG.keys.justPressed.V)
@@ -147,7 +151,6 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.M)
 		{
-            trace("Test");
 			drawTilemap = !drawTilemap;
 			dirtyWorld = true;
 		}
