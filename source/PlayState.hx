@@ -44,7 +44,7 @@ class PlayState extends FlxState
 		#end
         
 		super.create();
-        
+
 		world = new World(new Tile());
 
 		world.config.layerBounds.width = 640;
@@ -86,6 +86,10 @@ class PlayState extends FlxState
         drawTilemap = true;
         
         var hud = new FlxGroup();
+        
+        var hudBG = new FlxSprite();
+        hudBG.makeGraphic(220, FlxG.height, 0xff131c1b);
+        hud.add(hudBG);
 
 		hud.add(new FlxText(0, 0, 220, "R: Randomize\nI/O: Zoom In/Out\nArrow Keys: Move around\nV: Enable/Disable Voronoi\nM: Enable/Disable Tilemap\nV: Enable/Disable cities", 12));
 		
@@ -118,21 +122,14 @@ class PlayState extends FlxState
             }
             else {
                 var spr : FlxObject = cast bas;
-//                spr.scrollFactor.set();
-                spr.x += 10000;
-                spr.y += 10000;
+                spr.scrollFactor.set();
+                spr.x += FlxG.width - 220;
             }
         };
         hud.forEach(f);
         
-        add(hud);
         add(world);
-        
-        var c = new FlxCamera(FlxG.width - 220, 0, 220, FlxG.height, 1);
-        c.scroll.x = 10000;
-        c.scroll.y = 10000;
-        c.bgColor = 0xff131c1b;
-        FlxG.cameras.add(c);
+        add(hud);
     }
 
 	/**

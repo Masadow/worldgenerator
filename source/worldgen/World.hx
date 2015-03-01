@@ -68,7 +68,7 @@ class World extends FlxGroup
         tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
 
         Village.spawn(this);
-            
+
         created = true;
 	}
 
