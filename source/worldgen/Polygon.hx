@@ -1,6 +1,7 @@
 package worldgen;
 
 import flash.geom.Point;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSpriteUtil;
@@ -31,25 +32,29 @@ class Polygon
 	public function new(vertices : Array<Point>, kind : Int)
 	{
 		this.vertices = vertices;
+        FlxG.log.add(kind);
 		this.kind = kind;
 		
 		centroid = Helper.computeCentroid(vertices);
 	}
 	
-	public function draw(sprite : FlxSprite, tinfo : ITile)
+	public function draw(sprite : FlxSprite, tinfo : ITile, realColors : Bool = true)
 	{
 		var flxVertices = new Array<FlxPoint>();
 		for (vertice in vertices)
 		{
 			flxVertices.push(FlxPoint.weak(vertice.x, vertice.y));
 		}
-		var color = FlxColor.BLACK;
-		if (kind == tinfo.deepOcean())
-			color = FlxColor.BLUE;
-		else if (kind == tinfo.grass())
-			color = FlxColor.GREEN;
-		else if (kind == tinfo.mountain())
-			color = FlxColor.GRAY;
+        var color = FlxColor.BLACK | kind;
+        if (realColors) {
+            color = FlxColor.BLACK;
+            if (kind == tinfo.deepOcean())
+                color = FlxColor.BLUE;
+            else if (kind == tinfo.grass())
+                color = FlxColor.GREEN;
+            else if (kind == tinfo.mountain())
+                color = FlxColor.GRAY;
+        }
 		FlxSpriteUtil.drawPolygon(sprite, flxVertices, color, {color:color, thickness: 1});
 	}
 }

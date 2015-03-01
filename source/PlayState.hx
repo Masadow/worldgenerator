@@ -59,7 +59,8 @@ class PlayState extends FlxState
 		world.config.noise = perlin;
 		world.config.waterLevel = 0.35;
 
-		world.create(12, 12);
+		world.create(48, 48);
+        world.tilemap.scale.set(0.25, 0.25);
 		dirtyWorld = true;
 
 //		add(world.tilemap);

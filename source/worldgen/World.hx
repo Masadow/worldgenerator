@@ -50,16 +50,9 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 		var mapData : Array<Int> = new Array<Int>();
 
 		polygons = new Polygons(config, tinfo);
-		land = new Land(polygons.detailedPoly(), polygons.voronoi, config, tinfo);
+		land = new Land(polygons.detailedPoly(), polygons.voronoi, config, tinfo, width, height);
 
-        //Generate the tilemap
-		for (i in 0...width * height)
-		{ //Fill the map with ocean
-            
-			mapData.push(tinfo.deepOcean());
-		}
-        
-        tilemap.loadMapFromArray(mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
+        tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
 		created = true;
 	}
 
