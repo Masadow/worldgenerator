@@ -4,29 +4,34 @@ import com.nodename.delaunay.Voronoi;
 import com.nodename.geom.Polygon;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.group.FlxGroup;
+import flixel.math.FlxRandom;
 import flixel.tile.FlxTilemap;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.tile.FlxBaseTilemap;
+import flixel.FlxBasic;
+import flixel.FlxObject;
 
 /**
  * ...
  * @author Masadow
  */
-@:generic
-class World
+class World extends FlxGroup
 {
 	public var tilemap(default, null) : FlxTilemap;
 	public var created(default, null) : Bool;
 	
 	private var polygons : Polygons;
 	private var land : Land;
-    public var villages : Array<Village>;
+    public var villages : FlxTypedGroup<Village>;
     public var tinfo : ITile;
+    
+    public var random : FlxRandom;
 	
 	public var debugSprite(default, null) : FlxSprite;
-	
+    
 	/**
 	 * Config generator
 	 */
@@ -34,11 +39,18 @@ class World
 
 	public function new(tileInfo : ITile) 
 	{
+        super();
+        random = new FlxRandom();
 		tilemap = new FlxTilemap();
 		created = false;
         tinfo = tileInfo;
 		config = new Config();
 		debugSprite = new FlxSprite();
+        villages = new FlxTypedGroup<Village>();
+        
+        add(debugSprite);
+        add(tilemap);
+        add(villages);
 	}
 	
 	public function create(width : Int, height : Int)
@@ -55,13 +67,12 @@ class World
 
         tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
 
-        if (config.villages.enable)
-            villages = Village.spawn(this);
-		
+        Village.spawn(this);
+            
         created = true;
 	}
 
-	public function destroy()
+	override public function destroy()
 	{
 //		tilemap.destroy();
 		polygons.destroy();
@@ -92,12 +103,4 @@ class World
 			land.draw(debugSprite);
 		}
 	}
-    
-    public function drawTilemap()
-    {
-        if (created)
-        {
-            tilemap.draw();
-        }
-    }
 }

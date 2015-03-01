@@ -35,9 +35,9 @@ class Config
 		deepWaterLevel = 0.1;
 		mountainLevel = 0.8;
         villages = {
-            maxSize: 10,
-            minSize: 2,
-            minDistance: 15,
+            maxSize: 8,
+            minSize: 1,
+            minDistance: 5,
             spawnRate: 0.01,
             shape: REALISTIC,
             enable: true,

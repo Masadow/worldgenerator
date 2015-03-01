@@ -66,7 +66,6 @@ class Land
                 mapData.push(bestKey);
             }
         }
-        FlxG.watch.add(this, 'mapData');
 	}
 
 	public function draw(sprite : FlxSprite)

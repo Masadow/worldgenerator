@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -46,8 +47,8 @@ class PlayState extends FlxState
         
 		world = new World(new Tile());
 
-		world.config.layerBounds.width = 600;
-		world.config.layerBounds.height = 600;
+		world.config.layerBounds.width = 640;
+		world.config.layerBounds.height = 640;
 		world.config.node = 200;
 		world.config.lloydIteration = 4;
 		world.config.randomness = PSEUDORANDOM;
@@ -58,39 +59,80 @@ class PlayState extends FlxState
 		perlin.interpolation = CUBIC;
 		world.config.noise = perlin;
 		world.config.waterLevel = 0.35;
+        world.config.villages.nameBank = [
+            "Paris",
+            "Dublin",
+            "London",
+            "Madrid",
+            "Bordeaux",
+            "Munich",
+            "Montreal",
+            "New York",
+            "San Francisco",
+            "Amsterdam",
+            "Rome"
+        ];
 
-		world.create(40, 40);
-        world.tilemap.scale.set(0.46875, 0.46875);
+		world.create(100, 100);
+//        world.scale.set(0.46875, 0.46875);
 		dirtyWorld = true;
 
+        world.tilemap.scale.x = 0.5;
+        world.tilemap.scale.y = 0.5;
 //		add(world.tilemap);
-		add(world.debugSprite);
+//		add(world.debugSprite);
 
 		drawVoronoi = false;
         drawTilemap = true;
+        
+        var hud = new FlxGroup();
 
-		add(new FlxText(FlxG.width - 220, 0, 220, "R: Randomize\nArrow Keys: Move around\nV: Enable/Disable Voronoi\nM: Enable/Disable Tilemap\nV: Enable/Disable cities", 12));
+		hud.add(new FlxText(0, 0, 220, "R: Randomize\nI/O: Zoom In/Out\nArrow Keys: Move around\nV: Enable/Disable Voronoi\nM: Enable/Disable Tilemap\nV: Enable/Disable cities", 12));
 		
 		Controls.world = world;
 		Controls.perlin = perlin;
-		add(new FlxText(FlxG.width - 220, 120, 220, "Generator configuration"));
-		add(new Control(Controls.changeNode, "Nodes", FlxG.width - 220, 140));
-		add(new Control(Controls.changeLloyd, "Lloyd iterations", FlxG.width - 220, 160));
-		add(new Control(Controls.changeWaterLevel, "Water level", FlxG.width - 220, 180));
-		add(new Control(Controls.changeDeepWaterLevel, "Deep Water level", FlxG.width - 220, 200));
-		add(new Control(Controls.changeMountainLevel, "Mountain level", FlxG.width - 220, 220));
-		add(new Control(Controls.changeRandomness, "Randomness", FlxG.width - 220, 240));
-		add(new FlxText(FlxG.width - 220, 260, 220, "Perlin noise configuration"));
-		add(new Control(Controls.changeInterpolation, "Interpolation", FlxG.width - 220, 280));
-		add(new Control(Controls.changeAmplitude, "Amplitude", FlxG.width - 220, 300));
-		add(new Control(Controls.changeOctave, "Octaves", FlxG.width - 220, 320));
-		add(new Control(Controls.changePersistance, "Persistance", FlxG.width - 220, 340));
-		add(new FlxText(FlxG.width - 220, 360, 220, "Cities configuration"));
-		add(new Control(Controls.changeMinDistance, "Min distance", FlxG.width - 220, 380));
-		add(new Control(Controls.changeMinSize, "Min size", FlxG.width - 220, 400));
-		add(new Control(Controls.changeMaxSize, "Max size", FlxG.width - 220, 420));
-		add(new Control(Controls.changeSpawnRate, "Spawn rate", FlxG.width - 220, 440));
-		add(new Control(Controls.changeShape, "Shape", FlxG.width - 220, 460));
+		hud.add(new FlxText(0, 120, 220, "Generator configuration"));
+		hud.add(new Control(Controls.changeNode, "Nodes", 0, 140));
+		hud.add(new Control(Controls.changeLloyd, "Lloyd iterations", 0, 160));
+		hud.add(new Control(Controls.changeWaterLevel, "Water level", 0, 180));
+		hud.add(new Control(Controls.changeDeepWaterLevel, "Deep Water level", 0, 200));
+		hud.add(new Control(Controls.changeMountainLevel, "Mountain level", 0, 220));
+		hud.add(new Control(Controls.changeRandomness, "Randomness", 0, 240));
+		hud.add(new FlxText(0, 260, 220, "Perlin noise configuration"));
+		hud.add(new Control(Controls.changeInterpolation, "Interpolation", 0, 280));
+		hud.add(new Control(Controls.changeAmplitude, "Amplitude", 0, 300));
+		hud.add(new Control(Controls.changeOctave, "Octaves", 0, 320));
+		hud.add(new Control(Controls.changePersistance, "Persistance", 0, 340));
+		hud.add(new FlxText(0, 360, 220, "Cities configuration"));
+		hud.add(new Control(Controls.changeMinDistance, "Min distance", 0, 380));
+		hud.add(new Control(Controls.changeMinSize, "Min size", 0, 400));
+		hud.add(new Control(Controls.changeMaxSize, "Max size", 0, 420));
+		hud.add(new Control(Controls.changeSpawnRate, "Spawn rate", 0, 440));
+		hud.add(new Control(Controls.changeShape, "Shape", 0, 460));
+
+        var f : FlxBasic -> Void = null;
+        f = function(bas:FlxBasic) {
+            if (Std.is(bas, FlxGroup)) {
+                var g : FlxGroup = cast bas;
+                g.forEach(f);
+            }
+            else {
+                var spr : FlxObject = cast bas;
+//                spr.scrollFactor.set();
+                spr.x += 10000;
+                spr.y += 10000;
+            }
+        };
+        hud.forEach(f);
+        
+        add(hud);
+        add(world);
+        
+        var c = new FlxCamera(FlxG.width - 220, 0, 220, FlxG.height, 1);
+        c.scroll.x = 10000;
+        c.scroll.y = 10000;
+        c.bgColor = 0xff131c1b;
+        FlxG.cameras.add(c);
     }
 
 	/**
@@ -107,7 +149,7 @@ class PlayState extends FlxState
 		super.draw();
 
         if (drawTilemap) {
-            world.drawTilemap();
+//            world.drawTilemap();
         }
 		else if (dirtyWorld)
 		{
@@ -135,15 +177,19 @@ class PlayState extends FlxState
 		if (FlxG.keys.pressed.DOWN)
 			FlxG.camera.scroll.y += 300 * FlxG.elapsed;
 
-		//if (FlxG.keys.pressed.I)
-			//FlxG.camera.zoom *= 1.1;
-		//if (FlxG.keys.pressed.O)
-			//FlxG.camera.zoom /= 1.1;
+		if (FlxG.keys.pressed.I) {
+			world.tilemap.scale.x *= 1.1;
+			world.tilemap.scale.y *= 1.1;
+        }
+		if (FlxG.keys.pressed.O) {
+			world.tilemap.scale.x /= 1.1;
+			world.tilemap.scale.y /= 1.1;
+        }
 			
 		if (FlxG.keys.justPressed.R)
 		{
 			dirtyWorld = true;
-			world.create(40, 40);
+			world.create(100, 100);
 		}
 		
 		if (FlxG.keys.justPressed.V)
@@ -154,7 +200,8 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.M)
 		{
-			drawTilemap = !drawTilemap;
+            world.tilemap.visible = !world.tilemap.visible;
+//			drawTilemap = !drawTilemap;
 			dirtyWorld = true;
 		}
         

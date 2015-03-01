@@ -32,7 +32,6 @@ class Polygon
 	public function new(vertices : Array<Point>, kind : Int)
 	{
 		this.vertices = vertices;
-        FlxG.log.add(kind);
 		this.kind = kind;
 		
 		centroid = Helper.computeCentroid(vertices);
