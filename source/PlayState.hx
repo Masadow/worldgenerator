@@ -58,7 +58,6 @@ class PlayState extends FlxState
 		perlin.amplitude = 8;
 		perlin.interpolation = CUBIC;
 		world.config.noise = perlin;
-		world.config.waterLevel = 0.35;
         world.config.villages.nameBank = [
             "Paris",
             "Dublin",
@@ -72,6 +71,7 @@ class PlayState extends FlxState
             "Amsterdam",
             "Rome"
         ];
+        world.config.villages.shape = RANDOM;
 
 		world.create(100, 100);
 //        world.scale.set(0.46875, 0.46875);
