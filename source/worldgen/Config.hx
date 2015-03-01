@@ -19,18 +19,20 @@ class Config
 	public var noise : INoise;
 	public var noiseOctave : Int;
 	public var waterLevel : Float; //between 0 and 1
+    public var deepWaterLevel : Float;
 	public var mountainLevel : Float;
     public var villages : VillageConfiguration;
 	
-	public function new() 
-	{		
+	public function new()
+	{
 		//Default config
 		node = 2000;
 		layerBounds = new Rectangle(0, 0, 2048, 2048);
 		lloydIteration = 2;
 		randomness = QUASIRANDOM;
 		noise = new PerlinNoise();
-		waterLevel = 0.4;
+		waterLevel = 0.35;
+		deepWaterLevel = 0.1;
 		mountainLevel = 0.8;
         villages = {
             maxSize: 10,
@@ -38,7 +40,8 @@ class Config
             minDistance: 15,
             spawnRate: 0.01,
             shape: REALISTIC,
-            enable: true
+            enable: true,
+            nameBank: ["City"]
         };
 	}
 }
@@ -49,7 +52,8 @@ typedef VillageConfiguration = {
     maxSize : Int,
     spawnRate : Float,
     shape : VillageShape,
-    enable : Bool
+    enable : Bool,
+    nameBank: Array<String>
 };
 
 enum RandomAlgorithm {

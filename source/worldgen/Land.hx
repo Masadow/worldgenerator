@@ -28,6 +28,8 @@ class Land
 				polygon.kind = tinfo.mountain();
 			else if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.waterLevel)
 				polygon.kind = tinfo.grass();
+			else if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.deepWaterLevel)
+				polygon.kind = tinfo.coast();
             polygon.draw(s, tinfo, false);
 		}
 

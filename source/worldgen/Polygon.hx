@@ -50,6 +50,8 @@ class Polygon
             color = FlxColor.BLACK;
             if (kind == tinfo.deepOcean())
                 color = FlxColor.BLUE;
+            else if (kind == tinfo.coast())
+                color = 0xFF8080FF; //Light blue
             else if (kind == tinfo.grass())
                 color = FlxColor.GREEN;
             else if (kind == tinfo.mountain())

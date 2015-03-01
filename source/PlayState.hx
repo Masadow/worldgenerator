@@ -23,7 +23,7 @@ import worldgen.Config;
 class PlayState extends FlxState
 {
 	
-	private var world : World<Tile>;
+	private var world : World;
 	private var dirtyWorld : Bool;
 	private var drawVoronoi : Bool;
     private var drawTilemap : Bool;
@@ -44,10 +44,10 @@ class PlayState extends FlxState
         
 		super.create();
         
-		world = new World<Tile>();
+		world = new World(new Tile());
 
-		world.config.layerBounds.width = 400;
-		world.config.layerBounds.height = 400;
+		world.config.layerBounds.width = 600;
+		world.config.layerBounds.height = 600;
 		world.config.node = 200;
 		world.config.lloydIteration = 4;
 		world.config.randomness = PSEUDORANDOM;
@@ -59,8 +59,8 @@ class PlayState extends FlxState
 		world.config.noise = perlin;
 		world.config.waterLevel = 0.35;
 
-		world.create(50, 50);
-        world.tilemap.scale.set(0.25, 0.25);
+		world.create(40, 40);
+        world.tilemap.scale.set(0.46875, 0.46875);
 		dirtyWorld = true;
 
 //		add(world.tilemap);
@@ -77,19 +77,20 @@ class PlayState extends FlxState
 		add(new Control(Controls.changeNode, "Nodes", FlxG.width - 220, 140));
 		add(new Control(Controls.changeLloyd, "Lloyd iterations", FlxG.width - 220, 160));
 		add(new Control(Controls.changeWaterLevel, "Water level", FlxG.width - 220, 180));
-		add(new Control(Controls.changeMountainLevel, "Mountain level", FlxG.width - 220, 200));
-		add(new Control(Controls.changeRandomness, "Randomness", FlxG.width - 220, 220));
-		add(new FlxText(FlxG.width - 220, 240, 220, "Perlin noise configuration"));
-		add(new Control(Controls.changeInterpolation, "Interpolation", FlxG.width - 220, 260));
-		add(new Control(Controls.changeAmplitude, "Amplitude", FlxG.width - 220, 280));
-		add(new Control(Controls.changeOctave, "Octaves", FlxG.width - 220, 300));
-		add(new Control(Controls.changePersistance, "Persistance", FlxG.width - 220, 320));
-		add(new FlxText(FlxG.width - 220, 240, 340, "Cities configuration"));
-		add(new Control(Controls.changeMinDistance, "Min distance", FlxG.width - 220, 360));
-		add(new Control(Controls.changeMinSize, "Min size", FlxG.width - 220, 380));
-		add(new Control(Controls.changeMaxSize, "Max size", FlxG.width - 220, 400));
-		add(new Control(Controls.changeSpawnRate, "Spawn rate", FlxG.width - 220, 420));
-		add(new Control(Controls.changeShape, "Shape", FlxG.width - 220, 440));
+		add(new Control(Controls.changeDeepWaterLevel, "Deep Water level", FlxG.width - 220, 200));
+		add(new Control(Controls.changeMountainLevel, "Mountain level", FlxG.width - 220, 220));
+		add(new Control(Controls.changeRandomness, "Randomness", FlxG.width - 220, 240));
+		add(new FlxText(FlxG.width - 220, 260, 220, "Perlin noise configuration"));
+		add(new Control(Controls.changeInterpolation, "Interpolation", FlxG.width - 220, 280));
+		add(new Control(Controls.changeAmplitude, "Amplitude", FlxG.width - 220, 300));
+		add(new Control(Controls.changeOctave, "Octaves", FlxG.width - 220, 320));
+		add(new Control(Controls.changePersistance, "Persistance", FlxG.width - 220, 340));
+		add(new FlxText(FlxG.width - 220, 360, 220, "Cities configuration"));
+		add(new Control(Controls.changeMinDistance, "Min distance", FlxG.width - 220, 380));
+		add(new Control(Controls.changeMinSize, "Min size", FlxG.width - 220, 400));
+		add(new Control(Controls.changeMaxSize, "Max size", FlxG.width - 220, 420));
+		add(new Control(Controls.changeSpawnRate, "Spawn rate", FlxG.width - 220, 440));
+		add(new Control(Controls.changeShape, "Shape", FlxG.width - 220, 460));
     }
 
 	/**
@@ -142,7 +143,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.R)
 		{
 			dirtyWorld = true;
-			world.create(50, 50);
+			world.create(40, 40);
 		}
 		
 		if (FlxG.keys.justPressed.V)

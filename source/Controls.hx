@@ -9,7 +9,7 @@ import worldgen.Config;
  */
 class Controls
 {
-	public static var world : World<Tile>;
+	public static var world : World;
 	public static var perlin : PerlinNoise;
 	
 	public static function changeNode(dir : Int) : String
@@ -83,6 +83,16 @@ class Controls
 		return world.config.waterLevel + "";
 	}
 
+	public static function changeDeepWaterLevel(dir : Int) : String
+	{
+		if (dir > 0)
+			world.config.deepWaterLevel += 0.02;
+		else if (dir < 0)
+			world.config.deepWaterLevel -= 0.02;
+		world.config.deepWaterLevel = Math.fround(world.config.deepWaterLevel * 100) / 100;
+		return world.config.deepWaterLevel + "";
+	}
+    
 	public static function changeMountainLevel(dir : Int) : String
 	{
 		if (dir > 0)
@@ -96,10 +106,10 @@ class Controls
 	public static function changeSpawnRate(dir : Int) : String
 	{
 		if (dir > 0)
-			world.config.villages.spawnRate += 0.0005;
+			world.config.villages.spawnRate += 0.005;
 		else if (dir < 0)
-			world.config.villages.spawnRate -= 0.0005;
-		world.config.villages.spawnRate = Math.fround(world.config.villages.spawnRate * 10000) / 10000;
+			world.config.villages.spawnRate -= 0.005;
+		world.config.villages.spawnRate = Math.fround(world.config.villages.spawnRate * 1000) / 1000;
 		return world.config.villages.spawnRate + "";
 	}
 

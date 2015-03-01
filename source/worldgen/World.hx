@@ -15,15 +15,15 @@ import flixel.tile.FlxBaseTilemap;
  * @author Masadow
  */
 @:generic
-class World < TileInfo : (ITile, { function new():Void; } ) >
+class World
 {
 	public var tilemap(default, null) : FlxTilemap;
 	public var created(default, null) : Bool;
 	
-	private var tinfo : TileInfo;
 	private var polygons : Polygons;
 	private var land : Land;
-    private var villages : Array<Village>;
+    public var villages : Array<Village>;
+    public var tinfo : ITile;
 	
 	public var debugSprite(default, null) : FlxSprite;
 	
@@ -32,11 +32,11 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 	 */
 	public var config(default, null) : Config;
 
-	public function new() 
+	public function new(tileInfo : ITile) 
 	{
 		tilemap = new FlxTilemap();
 		created = false;
-		tinfo = new TileInfo();
+        tinfo = tileInfo;
 		config = new Config();
 		debugSprite = new FlxSprite();
 	}
@@ -52,11 +52,13 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 
 		polygons = new Polygons(config, tinfo);
 		land = new Land(polygons.detailedPoly(), polygons.voronoi, config, tinfo, width, height);
-        if (config.villages.enable)
-            villages = Village.spawn(land.mapData, width, config, tinfo);
 
         tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
-		created = true;
+
+        if (config.villages.enable)
+            villages = Village.spawn(this);
+		
+        created = true;
 	}
 
 	public function destroy()
