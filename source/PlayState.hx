@@ -67,9 +67,9 @@ class PlayState extends FlxState
 		add(world.debugSprite);
 
 		drawVoronoi = false;
-        drawTilemap = false;
+        drawTilemap = true;
 
-		add(new FlxText(FlxG.width - 220, 0, 220, "R: Randomize\nI: Zoom In\nO: Zoom Out\nArrow Keys: Move around\nV: Enable/Disable Voronoi\nM: Enable/Disable Tilemap", 12));
+		add(new FlxText(FlxG.width - 220, 0, 220, "R: Randomize\nArrow Keys: Move around\nV: Enable/Disable Voronoi\nM: Enable/Disable Tilemap\nV: Enable/Disable cities", 12));
 		
 		Controls.world = world;
 		Controls.perlin = perlin;
@@ -84,11 +84,13 @@ class PlayState extends FlxState
 		add(new Control(Controls.changeAmplitude, "Amplitude", FlxG.width - 220, 280));
 		add(new Control(Controls.changeOctave, "Octaves", FlxG.width - 220, 300));
 		add(new Control(Controls.changePersistance, "Persistance", FlxG.width - 220, 320));
-//		add(new FlxText(FlxG.width - 220, 240, 340, "Cities configuration"));
-//		add(new Control(Controls.changeMinDistance, "Minimum distance", FlxG.width - 220, 360));
-//		add(new Control(Controls.changeMinSize, "Minimum size", FlxG.width - 220, 380));
-//		add(new Control(Controls.changeMaxSize, "Maximum size", FlxG.width - 220, 400));
-	}
+		add(new FlxText(FlxG.width - 220, 240, 340, "Cities configuration"));
+		add(new Control(Controls.changeMinDistance, "Min distance", FlxG.width - 220, 360));
+		add(new Control(Controls.changeMinSize, "Min size", FlxG.width - 220, 380));
+		add(new Control(Controls.changeMaxSize, "Max size", FlxG.width - 220, 400));
+		add(new Control(Controls.changeSpawnRate, "Spawn rate", FlxG.width - 220, 420));
+		add(new Control(Controls.changeShape, "Shape", FlxG.width - 220, 440));
+    }
 
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
@@ -154,6 +156,10 @@ class PlayState extends FlxState
 			drawTilemap = !drawTilemap;
 			dirtyWorld = true;
 		}
+        
+        if (FlxG.keys.justPressed.C) {
+            world.config.villages.enable = !world.config.villages.enable;
+        }
     }
 	
 }

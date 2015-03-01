@@ -31,8 +31,6 @@ class Land
             polygon.draw(s, tinfo, false);
 		}
 
-        FlxG.log.add(s.pixels.getPixel(0,0));
-        
         //Need improvement !
         //Actually write the voronoi to a bitmap so we can check which region pixels belongs to
         mapData = new Array<Int>();

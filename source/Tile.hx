@@ -17,5 +17,6 @@ class Tile implements ITile
 	public function coast() : Int { return 1;}
 	public function sand() : Int { return 3;}
 	public function grass() : Int { return 0; }
-	public function mountain() : Int { return 5; }
+	public function mountain() : Int { return 4; }
+    public function village() : Int { return 12; }
 }

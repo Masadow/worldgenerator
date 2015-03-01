@@ -23,6 +23,7 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 	private var tinfo : TileInfo;
 	private var polygons : Polygons;
 	private var land : Land;
+    private var villages : Array<Village>;
 	
 	public var debugSprite(default, null) : FlxSprite;
 	
@@ -51,6 +52,8 @@ class World < TileInfo : (ITile, { function new():Void; } ) >
 
 		polygons = new Polygons(config, tinfo);
 		land = new Land(polygons.detailedPoly(), polygons.voronoi, config, tinfo, width, height);
+        if (config.villages.enable)
+            villages = Village.spawn(land.mapData, width, config, tinfo);
 
         tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
 		created = true;

@@ -92,4 +92,60 @@ class Controls
 		world.config.mountainLevel = Math.fround(world.config.mountainLevel * 100) / 100;
 		return world.config.mountainLevel + "";
 	}
+
+	public static function changeSpawnRate(dir : Int) : String
+	{
+		if (dir > 0)
+			world.config.villages.spawnRate += 0.0005;
+		else if (dir < 0)
+			world.config.villages.spawnRate -= 0.0005;
+		world.config.villages.spawnRate = Math.fround(world.config.villages.spawnRate * 10000) / 10000;
+		return world.config.villages.spawnRate + "";
+	}
+
+	public static function changeMinDistance(dir : Int) : String
+	{
+		if (dir > 0)
+			world.config.villages.minDistance += 1;
+		else if (dir < 0)
+			world.config.villages.minDistance -= 1;
+		return world.config.villages.minDistance + "";
+	}
+
+	public static function changeMinSize(dir : Int) : String
+	{
+		if (dir > 0)
+			world.config.villages.minSize += 1;
+		else if (dir < 0)
+			world.config.villages.minSize -= 1;
+		return world.config.villages.minSize + "";
+	}
+
+	public static function changeMaxSize(dir : Int) : String
+	{
+		if (dir > 0)
+			world.config.villages.maxSize += 1;
+		else if (dir < 0)
+			world.config.villages.maxSize -= 1;
+		return world.config.villages.maxSize + "";
+	}
+
+	public static function changeShape(dir : Int) : String
+	{
+        var values = [RANDOM, REALISTIC, SQUARE, ROUND];
+        var strings = ["Random", "Realistic", "Square", "Round"];
+        var idx = 0;
+        for (v in values) {
+            if (v == world.config.villages.shape)
+                break;
+            idx++;
+        }
+		if (dir > 0 && ++idx == values.length)
+            idx = 0;
+        if (dir < 0 && --idx == -1)
+            idx = values.length - 1;
+        world.config.villages.shape = values[idx];
+		return strings[idx];
+	}
+
 }

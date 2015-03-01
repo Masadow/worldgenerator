@@ -20,6 +20,7 @@ class Config
 	public var noiseOctave : Int;
 	public var waterLevel : Float; //between 0 and 1
 	public var mountainLevel : Float;
+    public var villages : VillageConfiguration;
 	
 	public function new() 
 	{		
@@ -31,11 +32,35 @@ class Config
 		noise = new PerlinNoise();
 		waterLevel = 0.4;
 		mountainLevel = 0.8;
+        villages = {
+            maxSize: 10,
+            minSize: 2,
+            minDistance: 15,
+            spawnRate: 0.01,
+            shape: REALISTIC,
+            enable: true
+        };
 	}
 }
+
+typedef VillageConfiguration = {
+    minDistance : Int,
+    minSize : Int,
+    maxSize : Int,
+    spawnRate : Float,
+    shape : VillageShape,
+    enable : Bool
+};
 
 enum RandomAlgorithm {
 	PSEUDORANDOM;
 	QUASIRANDOM;
+}
+
+enum VillageShape {
+	RANDOM;
+	REALISTIC;
+    SQUARE;
+    ROUND;
 }
 

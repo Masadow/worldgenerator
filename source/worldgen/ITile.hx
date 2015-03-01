@@ -15,4 +15,5 @@ interface ITile
 	public function sand() : Int;
 	public function grass() : Int;
 	public function mountain() : Int;
+    public function village() : Int;
 }
