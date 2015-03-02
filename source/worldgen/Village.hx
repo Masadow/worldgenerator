@@ -61,12 +61,13 @@ class Village extends FlxGroup
         world.tilemap.setTile(Std.int(coords.x), Std.int(coords.y), world.tinfo.village());
         
         extend(world.random.int(world.config.villages.minSize, world.config.villages.maxSize) - 1);
+        
+        rescale();
     }
     
-    override public function draw() {
+    public function rescale() {
         text.x = world.tilemap.x + world.tinfo.width() * worldPos.x * world.tilemap.scale.x - text.width * 0.5;
         text.y = world.tilemap.y + world.tinfo.height() * worldPos.y * world.tilemap.scale.y;
-        super.draw();
     }
     
     public function extend(size : Int) {
@@ -79,13 +80,13 @@ class Village extends FlxGroup
                 //Pick a non village neighboor tile
                 while (size > 0) {
                     var exclude : Array<Int> = [];
-                    if (current.x == 0 || world.tilemap.getTile(Std.int(current.x - 1), Std.int(current.y)) == world.tinfo.village())
+                    if (current.x == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x - 1), Std.int(current.y)), world.tinfo))
                         exclude.push(0); //LEFT
-                    if (current.y == 0 || world.tilemap.getTile(Std.int(current.x), Std.int(current.y - 1)) == world.tinfo.village())
+                    if (current.y == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y - 1)), world.tinfo))
                         exclude.push(1); //TOP
-                    if (current.x == world.tilemap.widthInTiles - 1 || world.tilemap.getTile(Std.int(current.x) + 1, Std.int(current.y)) == world.tinfo.village())
+                    if (current.x == world.tilemap.widthInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x) + 1, Std.int(current.y)), world.tinfo))
                         exclude.push(2); //RIGHT
-                    if (current.y == world.tilemap.heightInTiles - 1 || world.tilemap.getTile(Std.int(current.x), Std.int(current.y) + 1) == world.tinfo.village())
+                    if (current.y == world.tilemap.heightInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y) + 1), world.tinfo))
                         exclude.push(3); //BOTTOM
                     if (exclude.length == 4) { // We are stuck, we move and ignore this turn
                         exclude = [];

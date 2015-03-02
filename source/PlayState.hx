@@ -79,6 +79,7 @@ class PlayState extends FlxState
 
         world.tilemap.scale.x = 0.5;
         world.tilemap.scale.y = 0.5;
+        world.rescale();
 //		add(world.tilemap);
 //		add(world.debugSprite);
 
@@ -177,11 +178,14 @@ class PlayState extends FlxState
 		if (FlxG.keys.pressed.I) {
 			world.tilemap.scale.x *= 1.1;
 			world.tilemap.scale.y *= 1.1;
+            world.rescale();
         }
 		if (FlxG.keys.pressed.O) {
 			world.tilemap.scale.x /= 1.1;
 			world.tilemap.scale.y /= 1.1;
+            world.rescale();
         }
+        
 			
 		if (FlxG.keys.justPressed.R)
 		{

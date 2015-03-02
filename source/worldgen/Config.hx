@@ -32,7 +32,7 @@ class Config
 		randomness = QUASIRANDOM;
 		noise = new PerlinNoise();
 		waterLevel = 0.35;
-		deepWaterLevel = 0.1;
+		deepWaterLevel = 0; //Not working well, but you can enable it
 		mountainLevel = 0.8;
         villages = {
             maxSize: 30,

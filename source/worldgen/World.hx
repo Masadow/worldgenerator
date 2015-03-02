@@ -5,6 +5,8 @@ import com.nodename.geom.Polygon;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flixel.group.FlxGroup;
+import flixel.input.FlxPointer;
+import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.tile.FlxTilemap;
 import flixel.FlxSprite;
@@ -68,9 +70,17 @@ class World extends FlxGroup
         tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
 
         Village.spawn(this);
-
+        
         created = true;
 	}
+    
+    //Function to call when you change tilemap's scale
+    public function rescale() {
+        tilemap.updateBuffers();
+        for (village in villages) {
+            village.rescale();
+        }
+    }
 
 	override public function destroy()
 	{
