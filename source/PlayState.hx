@@ -146,10 +146,7 @@ class PlayState extends FlxState
 	{
 		super.draw();
 
-        if (drawTilemap) {
-//            world.drawTilemap();
-        }
-		else if (dirtyWorld)
+		if (!drawTilemap && dirtyWorld)
 		{
 			dirtyWorld = false;
             world.beginDraw();
@@ -202,7 +199,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.M)
 		{
             world.tilemap.visible = !world.tilemap.visible;
-//			drawTilemap = !drawTilemap;
+			drawTilemap = !drawTilemap;
 			dirtyWorld = true;
 		}
         

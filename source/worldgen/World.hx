@@ -86,9 +86,13 @@ class World extends FlxGroup
 	{
 //		tilemap.destroy();
 		polygons.destroy();
+        for (village in villages)
+            village.destroy();
+        villages.clear();
 		created = false;
 	}
 
+    //Debug from here
 	public function beginDraw()
 	{
 		if (created)
