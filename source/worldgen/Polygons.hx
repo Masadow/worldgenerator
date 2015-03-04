@@ -15,30 +15,20 @@ class Polygons
 	public var voronoi(default, null) : Voronoi;
 	private var nodes : Array<Point>;
 	private var tinfo : ITile;
+    private var config : Config;
 	
-	public function new(config : Config, tinfo : ITile)
+	public function new(world : World)
 	{
-		this.tinfo = tinfo;
+		this.tinfo = world.tinfo;
+        this.config = world.config;
 
-		nodes = randomNodes(config);
+//		nodes = randomNodes(config);
 
-		voronoi = new Voronoi(nodes, null, config.layerBounds);
+//		voronoi = new Voronoi(nodes, null, config.layerBounds);
 		
-		for (i in 0...config.lloydIteration)
-		{ //Make the regions centroids smoother using lloyd algorithm
-			nodes = new Array<Point>(); //Recycle nodes to hold new centroids
-			//Get centroids
-			for (polygon in voronoi.regions())
-			{
-				nodes.push(Helper.computeCentroid(polygon));
-			}
-			//Create the new Voronoi
-			voronoi.dispose();
-			voronoi = new Voronoi(nodes, null, config.layerBounds);
-		}
 	}
-
-	private function randomNodes(config : Config) : Array<Point>
+    
+	public function randomizeNodes()
 	{
 		nodes = new Array<Point>();
 		switch (config.randomness)
@@ -55,8 +45,26 @@ class Polygons
 					nodes.push(new Point(Math.random() * config.layerBounds.width, step * i));
 				}
 		}
-		return nodes;
 	}
+    
+    public function generateVoronoi() {
+		voronoi = new Voronoi(nodes, null, config.layerBounds);
+    }
+    
+    public function smoothRegions() {
+//		for (i in 0...config.lloydIteration)
+//		{ //Make the regions centroids smoother using lloyd algorithm
+			nodes = new Array<Point>(); //Recycle nodes to hold new centroids
+			//Get centroids
+			for (polygon in voronoi.regions())
+			{
+				nodes.push(Helper.computeCentroid(polygon));
+			}
+			//Create the new Voronoi
+			voronoi.dispose();
+//			voronoi = new Voronoi(nodes, null, config.layerBounds);
+//		}
+    }
 	
 	public function draw(sprite : FlxSprite)
 	{

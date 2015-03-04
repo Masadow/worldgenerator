@@ -9,30 +9,31 @@ import flixel.FlxSprite;
  */
 class Land
 {
-	private var polygons : Array<Polygon>;
+	private var polygons : Polygons;
 	private var tinfo : ITile;
+    private var config : Config;
+    private var widthInTiles : Int;
+    private var heightInTiles : Int;
+    private var noise : Array<Array<Float>>;
+    private var sprite : FlxSprite; //Sprite use to map voronoi to tiles idx
+    private var detailedPolys : Array<Polygon>; //Save this var because it will be destroyed after generation. useful to draw debug only
     public var mapData(default, null) : Array<Int>;
 
-	public function new(polygons : Array<Polygon>, voronoi : Voronoi, config : Config, tinfo : ITile, widthInTiles : Int, heightInTiles : Int)
+	public function new(world : World, widthInTiles : Int, heightInTiles : Int, polygons : Polygons)
 	{
-		this.polygons = polygons;
-		this.tinfo = tinfo;
+		this.tinfo = world.tinfo;
+        this.config = world.config;
+        this.polygons = polygons;
+        this.widthInTiles = widthInTiles;
+        this.heightInTiles = heightInTiles;
 
-		var noise : Array<Array<Float>> = config.noise.compute(config);
 
-        var s = new FlxSprite();
-        s.makeGraphic(Std.int(config.layerBounds.width), Std.int(config.layerBounds.height));
-		for (polygon in polygons)
-		{
-			if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.mountainLevel)
-				polygon.kind = tinfo.mountain();
-			else if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.waterLevel)
-				polygon.kind = tinfo.grass();
-			else if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.deepWaterLevel)
-				polygon.kind = tinfo.coast();
-            polygon.draw(s, tinfo, false);
-		}
+        sprite = new FlxSprite();
+        sprite.makeGraphic(Std.int(config.layerBounds.width), Std.int(config.layerBounds.height));
 
+	}
+    
+    public function make2DTerrain() {
         //Need improvement !
         //Actually write the voronoi to a bitmap so we can check which region pixels belongs to
         mapData = new Array<Int>();
@@ -45,7 +46,7 @@ class Land
                     for (i in 0...widthScale) {
                         var x : Int = Std.int(ti * (config.layerBounds.width / widthInTiles) + i);
                         var y : Int = Std.int(tj * (config.layerBounds.height / heightInTiles) + j);
-                        var pixel = s.pixels.getPixel(x, y);
+                        var pixel = sprite.pixels.getPixel(x, y);
                         if (counters.exists(pixel)) {
                             counters.set(pixel, counters.get(pixel) + 1);
                         }
@@ -66,11 +67,31 @@ class Land
                 mapData.push(bestKey);
             }
         }
-	}
+    }
+    
+    public function makeNoise() {
+		noise = config.noise.compute(config);
+    }
+
+    public function convertNoise() {
+        detailedPolys = polygons.detailedPoly();
+        for (polygon in detailedPolys)
+		{
+			if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.mountainLevel)
+				polygon.kind = tinfo.mountain();
+			else if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.waterLevel)
+				polygon.kind = tinfo.grass();
+			else if (noise[Std.int(polygon.x)][Std.int(polygon.y)] > config.deepWaterLevel)
+				polygon.kind = tinfo.coast();
+            //Draw 
+            polygon.draw(sprite, tinfo, false);
+		}
+    }
+
 
 	public function draw(sprite : FlxSprite)
 	{
-		for (polygon in polygons)
+		for (polygon in detailedPolys)
 		{
 			polygon.draw(sprite, tinfo);
 		}

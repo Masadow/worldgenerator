@@ -44,7 +44,7 @@ class PlayState extends FlxState
 		#end
         
 		super.create();
-
+        
 		world = new World(new Tile());
 
 		world.config.layerBounds.width = 640;
@@ -73,13 +73,10 @@ class PlayState extends FlxState
         ];
         world.config.villages.shape = RANDOM;
 
-		world.create(100, 100);
+		world.create(100, 100, onWorldCreate);
 //        world.scale.set(0.46875, 0.46875);
 		dirtyWorld = true;
 
-        world.tilemap.scale.x = 0.5;
-        world.tilemap.scale.y = 0.5;
-        world.rescale();
 //		add(world.tilemap);
 //		add(world.debugSprite);
 
@@ -131,6 +128,10 @@ class PlayState extends FlxState
         
         add(world);
         add(hud);
+        
+        world.progressBar.y = FlxG.height / 2 - world.progressBar.height / 2;
+        world.progressBar.x = (FlxG.width - 220) / 2 - world.progressBar.width / 2;
+        add(world.progressBar);
     }
 
 	/**
@@ -155,6 +156,12 @@ class PlayState extends FlxState
                 world.drawVoronoi();
 		}
 	}
+    
+    private function onWorldCreate(world : World) {
+        world.tilemap.scale.x = 0.5;
+        world.tilemap.scale.y = 0.5;
+        world.rescale();
+    }
 
 	/**
 	 * Function that is called once every frame.
@@ -187,7 +194,7 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.R)
 		{
 			dirtyWorld = true;
-			world.create(100, 100);
+			world.create(100, 100, onWorldCreate);
 		}
 		
 		if (FlxG.keys.justPressed.V)

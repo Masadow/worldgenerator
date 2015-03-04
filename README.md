@@ -1,3 +1,5 @@
 You must use HaxeFlixel/flixel to compile it
 
-[Online demo](http://bit.ly/QZ0G98)
+Requires flixel-ui
+
+[Online demo](http://bit.ly/1wBx4SO)
