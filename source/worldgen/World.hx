@@ -129,7 +129,6 @@ class World extends FlxGroup
                     Village.spawn(this);
                 case LAST_STEP:
                     //Game is created, we can remove the progress bar
-                    created = true;
                     for (i in this) {
                         i.destroy();
                     }
@@ -138,6 +137,7 @@ class World extends FlxGroup
                     add(debugSprite);
                     add(tilemap);
                     add(villages);
+                    created = true;
                     if (callback != null)
                         callback(this);
             }
@@ -148,19 +148,26 @@ class World extends FlxGroup
     
     //Function to call when you change tilemap's scale
     public function rescale() {
-        tilemap.updateBuffers();
-        for (village in villages) {
-            village.rescale();
+        if (created) {
+            tilemap.updateBuffers();
+            for (village in villages) {
+                village.rescale();
+            }
         }
     }
 
 	override public function destroy()
 	{
-		tilemap.destroy();
 		polygons.destroy();
-        for (village in villages)
-            village.destroy();
-        villages.clear();
+        var f : FlxBasic -> Void = null;
+        f = function(bas:FlxBasic) {
+            if (Std.is(bas, FlxGroup)) {
+                var g : FlxGroup = cast bas;
+                g.forEach(f);
+            }
+            bas.destroy();
+        };
+        forEach(f);
 		created = false;
 	}
 
