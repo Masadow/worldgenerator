@@ -150,7 +150,7 @@ class World extends FlxGroup
     public function rescale() {
         tilemap.updateBuffers();
         for (village in villages) {
-//            village.rescale();
+            village.rescale();
         }
     }
 
