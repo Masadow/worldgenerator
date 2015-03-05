@@ -7,9 +7,11 @@ import flash.geom.Rectangle;
 import flixel.addons.util.FlxAsyncLoop;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.input.FlxPointer;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
+import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.FlxSprite;
 import flixel.ui.FlxBar;
@@ -30,7 +32,9 @@ class World extends FlxGroup
 	public var tilemap(default, null) : FlxTilemap;
 	public var created(default, null) : Bool;
 	
-    public var progressBar : FlxBar;
+    public var progressBar : FlxSpriteGroup;
+    public var _progressBar : FlxBar;
+    public var _progressText : FlxText;
 	private var polygons : Polygons;
 	private var land : Land;
     public var villages : FlxTypedGroup<Village>;
@@ -60,10 +64,12 @@ class World extends FlxGroup
 		created = false;
         tinfo = tileInfo;
 		config = new Config();
-		debugSprite = new FlxSprite();
-        villages = new FlxTypedGroup<Village>();
-        progressBar = new FlxBar();
-        progressBar.setGraphicSize(250, 50);
+        progressBar = new FlxSpriteGroup();
+        _progressBar = new FlxBar();
+        _progressText = new FlxText();
+        _progressBar.setGraphicSize(250, 50);
+        progressBar.add(_progressBar);
+        progressBar.add(_progressText);
         step = LAST_STEP + 1;
 	}
 	
@@ -74,9 +80,11 @@ class World extends FlxGroup
         }
 
         progressBar.revive();
-        progressBar.setRange(0, LAST_STEP);
-        progressBar.value = 0;
+        _progressBar.setRange(0, LAST_STEP);
+        _progressBar.value = 0;
 
+        villages = new FlxTypedGroup<Village>();
+        debugSprite = new FlxSprite();
 		debugSprite.makeGraphic(Std.int(config.layerBounds.width), Std.int(config.layerBounds.height));
 			
 		var mapData : Array<Int> = new Array<Int>();
@@ -100,7 +108,6 @@ class World extends FlxGroup
     override public function update(elapsed:Float) 
     {
         super.update(elapsed);
-        FlxG.log.error("Start");
         
         if (!created && step <= LAST_STEP) {
             var back = false;
@@ -141,7 +148,7 @@ class World extends FlxGroup
                     if (callback != null)
                         callback(this);
             }
-            progressBar.value = step;
+            _progressBar.value = step;
         }
         
     }
@@ -168,12 +175,14 @@ class World extends FlxGroup
             bas.destroy();
         };
         forEach(f);
+        clear();
 		created = false;
 	}
 
     //Debug from here
 	public function beginDraw()
 	{
+        FlxG.log.warn("Draw");
 		if (created)
 		{
 			//Fill with white

@@ -129,8 +129,11 @@ class PlayState extends FlxState
         add(world);
         add(hud);
         
-        world.progressBar.y = FlxG.height / 2 - world.progressBar.height / 2;
-        world.progressBar.x = (FlxG.width - 220) / 2 - world.progressBar.width / 2;
+        //Need to improve the way the progress bar is layed out
+//        for (pb in world.progressBar) {
+            world.progressBar.y = FlxG.height / 2 - world.progressBar.height / 2;
+            world.progressBar.x = (FlxG.width - 220) / 2 - world.progressBar.width / 2;
+//        }
         add(world.progressBar);
     }
 
