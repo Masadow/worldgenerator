@@ -45,7 +45,7 @@ class PlayState extends FlxState
         
 		super.create();
         
-		world = new World(new Tile());
+		world = new World(new Tile.Tile16());
 
 		world.config.layerBounds.width = 640;
 		world.config.layerBounds.height = 640;
@@ -161,9 +161,10 @@ class PlayState extends FlxState
 	}
     
     private function onWorldCreate(world : World) {
-        world.tilemap.scale.x = 0.5;
-        world.tilemap.scale.y = 0.5;
-        world.rescale();
+        //Rescale the map when it is created
+//        world.tilemap.scale.x = 0.5;
+//        world.tilemap.scale.y = 0.5;
+//        world.rescale();
     }
 
 	/**

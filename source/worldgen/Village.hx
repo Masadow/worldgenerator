@@ -16,8 +16,8 @@ class Village extends FlxGroup
 {
     private static var nameLeft : Array<String> = new Array<String>();
     
-    public static function isBuildable(tile : Int, tinfo : ITile) {
-        return tile == tinfo.grass();
+    public static function isBuildable(tile : Int, tinfo : ITile, erase : Bool = false) {
+        return tile == tinfo.grass() || (erase && tile == tinfo.village());
     }
     
     public static function spawn(world : World) {
@@ -70,6 +70,24 @@ class Village extends FlxGroup
         text.y = world.tilemap.y + world.tinfo.height() * worldPos.y * world.tilemap.scale.y;
     }
     
+    private function excludeAround(current : FlxPoint, erase : Bool) {
+        var exclude : Array<Int> = [];
+        if (current.x == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x - 1), Std.int(current.y)), world.tinfo, erase))
+            exclude.push(0); //LEFT
+        if (current.y == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y - 1)), world.tinfo, erase))
+            exclude.push(1); //TOP
+        if (current.x == world.tilemap.widthInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x) + 1, Std.int(current.y)), world.tinfo, erase))
+            exclude.push(2); //RIGHT
+        if (current.y == world.tilemap.heightInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y) + 1), world.tinfo, erase))
+            exclude.push(3); //BOTTOM
+        return exclude;
+    }
+    
+    //It is possible to ask for a certain amount of buildable tiles
+    public function isExtensible(sizeNeeded : Int = 1) {
+        //Check if the village is extensible
+    }
+    
     public function extend(size : Int) {
         var current = worldPos;
         switch (world.config.villages.shape) {
@@ -79,26 +97,14 @@ class Village extends FlxGroup
                 //  * Touching villages
                 //Pick a non village neighboor tile
                 while (size > 0) {
-                    var exclude : Array<Int> = [];
-                    if (current.x == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x - 1), Std.int(current.y)), world.tinfo))
-                        exclude.push(0); //LEFT
-                    if (current.y == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y - 1)), world.tinfo))
-                        exclude.push(1); //TOP
-                    if (current.x == world.tilemap.widthInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x) + 1, Std.int(current.y)), world.tinfo))
-                        exclude.push(2); //RIGHT
-                    if (current.y == world.tilemap.heightInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y) + 1), world.tinfo))
-                        exclude.push(3); //BOTTOM
+                    var exclude = excludeAround(current, false);
                     if (exclude.length == 4) { // We are stuck, we move and ignore this turn
-                        exclude = [];
-                        //Still exclude non valid coordinates
-                        if (current.x == 0)
-                            exclude.push(0); //LEFT
-                        if (current.y == 0)
-                            exclude.push(1); //TOP
-                        if (current.x == world.tilemap.widthInTiles - 1)
-                            exclude.push(2); //RIGHT
-                        if (current.y == world.tilemap.heightInTiles - 1)
-                            exclude.push(3); //BOTTOM
+                        exclude = excludeAround(current, true);
+                        if (exclude.length == 4) {
+                            //Inifinite loop is possible if the village is surrounded by obstacles and there are not enough tiles remaining
+                            size = 0;
+                            break;
+                        }
                         size++;
                     }
                     var dest = world.random.int(0, 3, exclude);
