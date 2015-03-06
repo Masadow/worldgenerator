@@ -68,6 +68,7 @@ class World extends FlxGroup
         _progressBar = new FlxBar();
         _progressText = new FlxText();
         _progressBar.setGraphicSize(250, 50);
+        _progressText.y += 40;
         progressBar.add(_progressBar);
         progressBar.add(_progressText);
         step = LAST_STEP + 1;
@@ -113,28 +114,38 @@ class World extends FlxGroup
             var back = false;
             switch (step++) {
                 case 0:
+                    _progressText.text = "1/" + (LAST_STEP + 1) + " Welcoming God";
                     polygons.randomizeNodes();
                     lloydIterations = config.lloydIteration;
                 case 1:
+                    _progressText.text = "2/" + (LAST_STEP + 1) + " Doing some weird maths";
                     polygons.generateVoronoi();
                 case 2:
+                    _progressText.text = "3/" + (LAST_STEP + 1) + " Polishing the mountains";
                     if (--lloydIterations >= 0) {
                         polygons.smoothRegions();
                         step = 1;
                     }
                 case 3:
+                    _progressText.text = "4/" + (LAST_STEP + 1) + " God have a break";
                     land.makeNoise();
                 case 4:
+                    _progressText.text = "5/" + (LAST_STEP + 1) + " God try to resume working";
                     land.convertNoise();
                 case 5:
+                    _progressText.text = "6/" + (LAST_STEP + 1) + " God finally resumed working";
                     land.make2DTerrain();
                 case 6:
+                    _progressText.text = "7/" + (LAST_STEP + 1) + " Give a toy to God";
                     tilemap = new FlxTilemap();
                 case 7:
+                    _progressText.text = "8/" + (LAST_STEP + 1) + " Putting silly creations altogether";
                     tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
                 case 8:
+                    _progressText.text = "9/" + (LAST_STEP + 1) + " Bringing ugly humans";
                     Village.spawn(this);
                 case LAST_STEP:
+                    _progressText.text = "10/" + (LAST_STEP + 1) + " Cleaning all that mess";
                     //Game is created, we can remove the progress bar
                     for (i in this) {
                         i.destroy();
@@ -182,7 +193,6 @@ class World extends FlxGroup
     //Debug from here
 	public function beginDraw()
 	{
-        FlxG.log.warn("Draw");
 		if (created)
 		{
 			//Fill with white
