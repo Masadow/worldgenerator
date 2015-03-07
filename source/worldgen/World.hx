@@ -66,11 +66,12 @@ class World extends FlxGroup
         tinfo = tileInfo;
 		config = new Config();
         progressBar = new FlxSpriteGroup();
+        progressBar.scrollFactor.set();
         _progressBar = new FlxBar();
-        _progressText = new FlxText();
         _progressBar.setGraphicSize(250, 50);
-        _progressText.y += 40;
         progressBar.add(_progressBar);
+        _progressText = new FlxText();
+        _progressText.y += 40;
         progressBar.add(_progressText);
         step = LAST_STEP + 1;
 	}
