@@ -30,6 +30,7 @@ class World extends FlxGroup
     private static inline var LAST_STEP = 9;
     
 	public var tilemap(default, null) : FlxTilemap;
+	public var objects(default, null) : FlxTilemap;
 	public var created(default, null) : Bool;
 	
     public var progressBar : FlxSpriteGroup;
@@ -136,11 +137,17 @@ class World extends FlxGroup
                     _progressText.text = "6/" + (LAST_STEP + 1) + " God finally resumed working";
                     land.make2DTerrain();
                 case 6:
-                    _progressText.text = "7/" + (LAST_STEP + 1) + " Give a toy to God";
+                    _progressText.text = "7/" + (LAST_STEP + 1) + " Putting silly creations altogether";
                     tilemap = new FlxTilemap();
-                case 7:
-                    _progressText.text = "8/" + (LAST_STEP + 1) + " Putting silly creations altogether";
                     tilemap.loadMapFromArray(land.mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
+                case 7:
+                    _progressText.text = "8/" + (LAST_STEP + 1) + " Give a toy to God";
+                    objects = new FlxTilemap();
+                    var mapData = new Array<Int>();
+                    for (_ in 0...width * height) {
+                        mapData.push(-1);
+                    }
+                    objects.loadMapFromArray(mapData, width, height, tinfo.tileset(), tinfo.width(), tinfo.height(), OFF, 0, 0, 0);
                 case 8:
                     _progressText.text = "9/" + (LAST_STEP + 1) + " Bringing ugly humans";
                     Village.spawn(this);
@@ -154,6 +161,7 @@ class World extends FlxGroup
                     progressBar.kill();
                     add(debugSprite);
                     add(tilemap);
+                    add(objects);
                     add(villages);
                     created = true;
                     if (callback != null)

@@ -5,6 +5,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRandom;
 import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
 
 using flixel.util.FlxArrayUtil;
 
@@ -16,18 +17,24 @@ class Village extends FlxGroup
 {
     private static var nameLeft : Array<String> = new Array<String>();
     
-    public static function isBuildable(tile : Int, tinfo : ITile, erase : Bool = false) {
-        return tile == tinfo.grass() || (erase && tile == tinfo.village());
+    public static function isBuildable(tileID : Int, world : World, erase : Bool = false) {
+        var terrain = world.tilemap.getTileByIndex(tileID);
+        var object = terrain;
+        if (world.config.villages.objectLayer)
+            object = world.objects.getTileByIndex(tileID);
+        return terrain == world.tinfo.grass() || (erase && object == world.tinfo.village());
     }
     
     public static function spawn(world : World) {
-        var mapData = world.tilemap.getData();
-        for (i in 0...mapData.length) {
-            if (isBuildable(mapData[i], world.tinfo) && Math.random() < world.config.villages.spawnRate) {
+        for (i in 0...world.tilemap.totalTiles) {
+            if (isBuildable(i, world) && Math.random() < world.config.villages.spawnRate) {
                 var x = i % world.tilemap.widthInTiles;
                 var y = Math.floor(i / world.tilemap.widthInTiles);
                 if (Helper.checkTilesInCircle(x, y, world.config.villages.minDistance, function (x, y) {
-                    return world.tilemap.getTile(x, y) != world.tinfo.village();
+                    if (world.config.villages.objectLayer)
+                        return world.objects.getTile(x, y) != world.tinfo.village();
+                    else
+                        return world.tilemap.getTile(x, y) != world.tinfo.village();
                 })) {
                     world.villages.add(new Village(world, new FlxPoint(x, y)));
                 }
@@ -39,6 +46,7 @@ class Village extends FlxGroup
     public var worldPos(default, null) : FlxPoint;
     private var text : FlxText;
     private var world : World;
+    private var tilemap : FlxTilemap;
     public var name : String;
     public var tiles : Array<FlxPoint>;
 
@@ -48,6 +56,7 @@ class Village extends FlxGroup
         this.world = world;
         worldPos = coords;
         tiles = [coords];
+        tilemap = world.config.villages.objectLayer ? world.objects : world.tilemap;
 
         //Pick a name from bank
         if (nameLeft.length == 0) {
@@ -58,7 +67,7 @@ class Village extends FlxGroup
         
         add((text = new FlxText(0, 0, 0, name)));
 
-        world.tilemap.setTile(Std.int(coords.x), Std.int(coords.y), world.tinfo.village());
+        tilemap.setTile(Std.int(coords.x), Std.int(coords.y), world.tinfo.village());
         
         extend(world.random.int(world.config.villages.minSize, world.config.villages.maxSize) - 1);
         
@@ -66,19 +75,19 @@ class Village extends FlxGroup
     }
     
     public function rescale() {
-        text.x = world.tilemap.x + world.tinfo.width() * worldPos.x * world.tilemap.scale.x - text.width * 0.5;
-        text.y = world.tilemap.y + world.tinfo.height() * worldPos.y * world.tilemap.scale.y;
+        text.x = tilemap.x + world.tinfo.width() * worldPos.x * tilemap.scale.x - text.width * 0.5;
+        text.y = tilemap.y + world.tinfo.height() * worldPos.y * tilemap.scale.y;
     }
     
     private function excludeAround(current : FlxPoint, erase : Bool) {
         var exclude : Array<Int> = [];
-        if (current.x == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x - 1), Std.int(current.y)), world.tinfo, erase))
+        if (current.x == 0 || !isBuildable(Std.int(current.x - 1) + tilemap.widthInTiles * Std.int(current.y), world, erase))
             exclude.push(0); //LEFT
-        if (current.y == 0 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y - 1)), world.tinfo, erase))
+        if (current.y == 0 || !isBuildable(Std.int(current.x) + tilemap.widthInTiles * Std.int(current.y - 1), world, erase))
             exclude.push(1); //TOP
-        if (current.x == world.tilemap.widthInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x) + 1, Std.int(current.y)), world.tinfo, erase))
+        if (current.x == tilemap.widthInTiles - 1 || !isBuildable(Std.int(current.x) + 1 + tilemap.widthInTiles * Std.int(current.y), world, erase))
             exclude.push(2); //RIGHT
-        if (current.y == world.tilemap.heightInTiles - 1 || !isBuildable(world.tilemap.getTile(Std.int(current.x), Std.int(current.y) + 1), world.tinfo, erase))
+        if (current.y == tilemap.heightInTiles - 1 || !isBuildable(Std.int(current.x) + tilemap.widthInTiles *  Std.int(current.y + 1), world, erase))
             exclude.push(3); //BOTTOM
         return exclude;
     }
@@ -127,7 +136,7 @@ class Village extends FlxGroup
     
     public function reclaim(pos : FlxPoint) {
         tiles.push(pos);
-        world.tilemap.setTile(Std.int(pos.x), Std.int(pos.y), world.tinfo.village());
+        tilemap.setTile(Std.int(pos.x), Std.int(pos.y), world.tinfo.village());
     }
     
 }

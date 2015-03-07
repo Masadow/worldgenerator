@@ -41,7 +41,8 @@ class Config
             spawnRate: 0.01,
             shape: REALISTIC,
             enable: true,
-            nameBank: ["City"]
+            nameBank: ["City"],
+            objectLayer: false
         };
 	}
 }
@@ -53,7 +54,8 @@ typedef VillageConfiguration = {
     spawnRate : Float,
     shape : VillageShape,
     enable : Bool,
-    nameBank: Array<String>
+    nameBank: Array<String>,
+    objectLayer: Bool
 };
 
 enum RandomAlgorithm {

@@ -64,14 +64,15 @@ class PlayState extends FlxState
             "London",
             "Madrid",
             "Bordeaux",
-            "Munich",
+            "Berlin",
             "Montreal",
             "New York",
             "San Francisco",
             "Amsterdam",
-            "Rome"
+            "Roma"
         ];
         world.config.villages.shape = RANDOM;
+        world.config.villages.objectLayer = true; //Display villages on a second tilemap (useful for transparent tiles)
 
 		world.create(100, 100, onWorldCreate);
 //        world.scale.set(0.46875, 0.46875);
